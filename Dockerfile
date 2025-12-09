@@ -1,21 +1,35 @@
-# Use a Node.js image
-FROM node:22-alpine
+# Multi-stage build for smaller final image
+# Stage 1: Install dependencies
+FROM oven/bun:1-alpine AS deps
 
-# Set the working directory
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY package.json package-lock.json ./
-RUN npm ci
+# Copy package files
+COPY package.json bun.lock ./
 
-# Copy the rest of the code
-COPY . .
+# Install production dependencies only
+RUN bun install --frozen-lockfile --production
 
-# Build TypeScript files
-RUN npm run build
+# Stage 2: Final image with only runtime
+FROM oven/bun:1-alpine
 
-# Remove development dependencies
-RUN npm prune --omit=dev
+WORKDIR /app
 
-# Set the command to run the script every time the container starts
-CMD ["npm", "start"]
+# Copy only production dependencies from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copy application code
+COPY package.json ./
+COPY index.ts ./
+COPY src ./src
+COPY tsconfig.json ./
+
+# Run as non-root user for security
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S bunuser -u 1001 && \
+    chown -R bunuser:nodejs /app
+
+USER bunuser
+
+# Bun runs TypeScript directly, no build step needed
+CMD ["bun", "run", "index.ts"]
