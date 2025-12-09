@@ -8,9 +8,8 @@
   "files": {
     "ignoreUnknown": true,
     "includes": [
-      "src/**/*.{ts,tsx,js,jsx}",
-      "scripts/**/*.{ts,tsx,js,jsx}",
-      "*.{ts,js,json}"
+      "*.{ts,js,json,tsx,jsx}",
+      "src/**/*.{ts,js,json,tsx,jsx}"
     ]
   },
   "formatter": {
@@ -23,27 +22,7 @@
       "recommended": true,
       "style": {
         "useImportType": "off",
-        "noNonNullAssertion": "off",
-        "noRestrictedImports": {
-          "level": "error",
-          "options": {
-            "patterns": [
-              {
-                "group": [
-                  "./*",
-                  "../*"
-                ],
-                "message": "Relative imports are restricted. Use absolute imports with @/ alias instead."
-              },
-              {
-                "group": [
-                  "src/**"
-                ],
-                "message": "Imports from 'src/' are restricted. Use absolute imports with @/ alias instead (e.g., 'src/components/ui' -> '@/components/ui')."
-              }
-            ]
-          }
-        }
+        "noNonNullAssertion": "off"
       },
       "security": {
         "noDangerouslySetInnerHtml": "off"
@@ -112,9 +91,6 @@
   "css": {
     "formatter": {
       "quoteStyle": "single"
-    },
-    "parser": {
-      "tailwindDirectives": true
     }
   }
 }
