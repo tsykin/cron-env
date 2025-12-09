@@ -3,5 +3,5 @@ export type Env = {
 	schedule: string;
 	method: string;
 	url: string;
-	props?: Record<string, string>;
+	props?: Record<string, string | number | boolean>;
 };

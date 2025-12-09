@@ -76,3 +76,26 @@ export function formatDate(
 			return `${Y}-${M}-${D}`;
 	}
 }
+
+// Helper function to parse a string value into its proper type
+export function parseValue(value: string): string | number | boolean {
+	// Try to parse as boolean first (case-insensitive)
+	const lowerValue = value.toLowerCase().trim();
+	if (lowerValue === 'true') return true;
+	if (lowerValue === 'false') return false;
+
+	// Try to parse as number
+	if (value.trim() !== '' && !Number.isNaN(Number(value))) {
+		const numValue = Number(value);
+		// Check if it's a valid number (not NaN and the string representation matches)
+		// This handles integers and floats, but excludes NaN, Infinity, etc.
+		if (Number.isFinite(numValue)) {
+			// If the original string doesn't have decimal point and matches the number, return as number
+			// This ensures "123" becomes 123, but "123.0" also becomes 123.0
+			return numValue;
+		}
+	}
+
+	// Return as string if not a boolean or number
+	return value;
+}

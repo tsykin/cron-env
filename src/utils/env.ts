@@ -2,6 +2,7 @@ import * as dotenv from 'dotenv';
 import * as cron from 'node-cron';
 import { z } from 'zod';
 import type { Env } from '@/utils/types';
+import { parseValue } from '@/utils/utils';
 
 dotenv.config();
 
@@ -20,8 +21,10 @@ const UrlSchema = z.string().url({
 	message: 'Invalid URL format',
 });
 
-// Validation schema for props
-const PropsSchema = z.record(z.string(), z.string()).optional();
+// Validation schema for props (can be string, number, or boolean)
+const PropsSchema = z
+	.record(z.string(), z.union([z.string(), z.number(), z.boolean()]))
+	.optional();
 
 // Validation schema for a single job
 const JobSchema = z.object({
@@ -97,12 +100,12 @@ export function getAllEnv() {
 				const [schedule, method, url, ...propParts] = parts;
 
 				// Parse props if they exist
-				const props: Record<string, string> = {};
+				const props: Record<string, string | number | boolean> = {};
 				if (propParts.length > 0) {
 					for (const propPart of propParts) {
 						const [key, value] = propPart.split('=');
-						if (key && value) {
-							props[key] = value;
+						if (key && value !== undefined) {
+							props[key] = parseValue(value);
 						}
 					}
 				}
