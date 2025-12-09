@@ -1,21 +1,18 @@
-# Use a Node.js image
-FROM node:22-alpine
+# Use a Bun image
+FROM oven/bun:1-alpine
 
 # Set the working directory
 WORKDIR /app
 
 # Copy package files and install dependencies
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY package.json bun.lock* ./
+RUN bun install --frozen-lockfile
 
 # Copy the rest of the code
 COPY . .
 
-# Build TypeScript files
-RUN npm run build
-
 # Remove development dependencies
-RUN npm prune --omit=dev
+RUN bun install --production
 
 # Set the command to run the script every time the container starts
-CMD ["npm", "start"]
+CMD ["bun", "start"]

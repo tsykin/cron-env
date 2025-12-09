@@ -1,10 +1,10 @@
-# Node.js HTTP Cron Scheduler
+# Bun HTTP Cron Scheduler
 
 ![MIT License](https://img.shields.io/github/license/tsykin/cron-env)
-![Node.js](https://img.shields.io/badge/node-%3E%3D22.0.0-brightgreen)
+![Bun](https://img.shields.io/badge/bun-1.0+-brightgreen)
 ![Docker Ready](https://img.shields.io/badge/docker-ready-blue)
 
-A simple utility that enables scheduling multiple HTTP requests (cron jobs) using environment variables, `node-cron` and Node.js as a runtime.
+A simple utility that enables scheduling multiple HTTP requests (cron jobs) using environment variables, `node-cron` and Bun as a runtime.
 
 ## Use Cases
 
@@ -25,9 +25,9 @@ This utility is ideal for:
 ## Getting Started
 
 1. Clone this repository
-2. Install dependencies: `npm install`
+2. Install dependencies: `bun install`
 3. Create a `.env` file in the root directory and configure environment variables (see instructions below)
-4. Start development server: `npm run dev`
+4. Start the scheduler: `bun run start`
 
 ## Deployment
 
@@ -85,6 +85,19 @@ Where:
 
 Fields are separated by `::` (double colon).
 
+#### Property Value Types
+
+Property values are automatically parsed into their appropriate data types:
+
+- **Booleans**: Values `"true"` or `"false"` (case-insensitive) are converted to boolean types
+- **Numbers**: Numeric strings are automatically converted to numbers (e.g., `"123"` → `123`, `"45.67"` → `45.67`)
+- **Strings**: All other values remain as strings
+
+Examples:
+- `enabled=true` → `{ "enabled": true }` (boolean)
+- `count=123` → `{ "count": 123 }` (number)
+- `name=test` → `{ "name": "test" }` (string)
+
 ## Examples
 
 ### Basic Jobs
@@ -113,12 +126,30 @@ This will send a POST request with the body:
 
 ```json
 {
-  "userId": "123",
+  "userId": 123,
   "action": "backup"
 }
 ```
 
-2. Multiple jobs with different schedules:
+2. POST request with typed properties (numbers and booleans):
+
+```env
+JOB1="0 0 * * *::POST::https://api.example.com/task::userId=123::enabled=true::priority=5"
+```
+
+This will send a POST request with the body:
+
+```json
+{
+  "userId": 123,
+  "enabled": true,
+  "priority": 5
+}
+```
+
+Note: `userId` and `priority` are parsed as numbers, while `enabled` is parsed as a boolean.
+
+3. Multiple jobs with different schedules:
 
 ```env
 JOB1="*/5 * * * *::GET::https://api.example.com/health"
@@ -134,7 +165,7 @@ The scheduler includes comprehensive validation for all configuration:
 - **HTTP Method**: Must be one of: GET, POST, PUT, DELETE, PATCH
 - **URL**: Validates proper URL format
 - **Timezone**: Validates against IANA timezone database
-- **Properties**: Validates key-value pair format
+- **Properties**: Validates key-value pair format and automatically parses data types (string, number, boolean)
 
 If validation fails, the scheduler will:
 
