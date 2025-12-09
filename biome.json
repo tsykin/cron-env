@@ -1,0 +1,120 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.0/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "src/**/*.{ts,tsx,js,jsx}",
+      "scripts/**/*.{ts,tsx,js,jsx}",
+      "*.{ts,js,json}"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "tab"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "style": {
+        "useImportType": "off",
+        "noNonNullAssertion": "off",
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "patterns": [
+              {
+                "group": [
+                  "./*",
+                  "../*"
+                ],
+                "message": "Relative imports are restricted. Use absolute imports with @/ alias instead."
+              },
+              {
+                "group": [
+                  "src/**"
+                ],
+                "message": "Imports from 'src/' are restricted. Use absolute imports with @/ alias instead (e.g., 'src/components/ui' -> '@/components/ui')."
+              }
+            ]
+          }
+        }
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      },
+      "correctness": {
+        "noUnusedVariables": "off",
+        "noUnusedImports": "off",
+        "noNestedComponentDefinitions": "off",
+        "useExhaustiveDependencies": "off",
+        "noUnusedFunctionParameters": "off",
+        "useUniqueElementIds": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noShadowRestrictedNames": "off",
+        "noDocumentCookie": "off",
+        "noArrayIndexKey": "off"
+      },
+      "a11y": {
+        "useKeyWithClickEvents": "off",
+        "useFocusableInteractive": "off",
+        "useSemanticElements": "off",
+        "useAriaPropsForRole": "off",
+        "noRedundantRoles": "off",
+        "noStaticElementInteractions": "off"
+      },
+      "nursery": {
+        "useSortedClasses": {
+          "level": "warn",
+          "fix": "safe",
+          "options": {
+            "functions": [
+              "clsx",
+              "cva",
+              "tw"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "jsxQuoteStyle": "double",
+      "trailingCommas": "es5",
+      "semicolons": "always",
+      "arrowParentheses": "always",
+      "bracketSpacing": true,
+      "bracketSameLine": false
+    }
+  },
+  "json": {
+    "formatter": {
+      "enabled": true
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "css": {
+    "formatter": {
+      "quoteStyle": "single"
+    },
+    "parser": {
+      "tailwindDirectives": true
+    }
+  }
+}
