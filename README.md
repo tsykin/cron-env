@@ -33,7 +33,7 @@ This utility is ideal for:
 
 You can easily self-host this scheduler or deploy it in seconds using my Railway template:
 
-👉 [Deploy on Railway](https://railway.com/template/oIgT0x?referralCode=tsykin)
+👉 [Deploy on Railway](https://railway.com/deploy/oIgT0x?referralCode=tsykin)
 
 ## Configuration
 
